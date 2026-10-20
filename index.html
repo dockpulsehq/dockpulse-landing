@@ -3,176 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DockPulse — Fleet maintenance for watersports operators</title>
-  <meta name="description" content="The real-time pulse of your dock operation. Fleet maintenance management for watersports rental operators.">
+  <title>DockPulse | Fleet maintenance for watersports rental operators</title>
+  <meta name="description" content="DockPulse is the maintenance app for watersports rental operators. Report issues in seconds, alert mechanics instantly, and see every boat across every location in one place.">
+  <meta property="og:title" content="DockPulse | Fleet maintenance for watersports rental operators">
+  <meta property="og:description" content="Know which boats are ready before the first rental leaves the dock.">
+  <meta property="og:url" content="https://dockpulse.io">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0f1923">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #0f1923;
+      --bg-2: #13212e;
+      --card: #172736;
+      --line: rgba(148, 163, 184, 0.14);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --accent: #0ea5e9;
+      --accent-hi: #38bdf8;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f1923;
-      color: #f1f5f9;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem;
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    .container {
-      max-width: 640px;
-      width: 100%;
-      text-align: center;
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    nav { position: sticky; top: 0; z-index: 10; background: rgba(15, 25, 35, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.125rem; letter-spacing: -0.3px; }
+    .logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 0.9375rem; color: var(--muted); }
+    .nav-links a:hover { color: var(--text); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border-radius: 10px; font-weight: 600; font-size: 0.9375rem; transition: background 0.15s, border-color 0.15s, color 0.15s; white-space: nowrap; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hi); color: #fff; }
+    .btn-ghost { border: 1px solid var(--line); color: var(--text); }
+    .btn-ghost:hover { border-color: var(--muted); }
+    .btn-sm { padding: 8px 16px; font-size: 0.875rem; }
+
+    .hero { padding: 80px 0 72px; background: radial-gradient(ellipse 70% 60% at 75% 30%, rgba(14, 165, 233, 0.14), transparent 70%); }
+    .hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+    .eyebrow { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 22px; }
+    h1 span { color: var(--accent); }
+    .lead { font-size: 1.125rem; color: var(--muted); max-width: 540px; margin-bottom: 32px; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 36px; }
+    .proof { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.9375rem; padding-top: 24px; border-top: 1px solid var(--line); max-width: 540px; }
+    .proof-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18); }
+
+    .phone-stage { display: flex; justify-content: center; }
+    .phone-wrap { position: relative; }
+    .phone { width: 300px; border-radius: 40px; background: #05090d; padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(148,163,184,0.18); }
+    .screen { border-radius: 30px; background: #0b141c; overflow: hidden; padding: 18px 14px 20px; font-size: 12px; }
+    .screen-top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; font-weight: 600; margin-bottom: 14px; padding: 0 4px; }
+    .screen h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; margin: 0 4px 2px; }
+    .screen .sub { color: var(--dim); font-size: 11px; margin: 0 4px 14px; }
+    .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .tile { background: var(--card); border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .tile b { display: block; font-size: 20px; line-height: 1.1; }
+    .tile small { color: var(--muted); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+    .tile.red b { color: var(--red); } .tile.amber b { color: var(--amber); } .tile.green b { color: var(--green); }
+    .section-label { color: var(--dim); font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin: 0 4px 8px; }
+    .issue { display: flex; gap: 10px; align-items: flex-start; background: var(--card); border-radius: 12px; padding: 10px; margin-bottom: 7px; }
+    .bar { flex: none; width: 4px; align-self: stretch; border-radius: 4px; }
+    .issue strong { display: block; font-size: 12px; font-weight: 600; line-height: 1.35; }
+    .issue em { font-style: normal; color: var(--muted); font-size: 10.5px; }
+    .pill { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-left: 4px; vertical-align: 1px; }
+    .pill.red { background: rgba(239,68,68,0.16); color: #fca5a5; }
+    .pill.amber { background: rgba(245,158,11,0.16); color: #fcd34d; }
+    .pill.green { background: rgba(34,197,94,0.16); color: #86efac; }
+    .toast { position: absolute; left: -64px; top: -36px; width: 250px; background: rgba(30, 41, 59, 0.97); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; font-size: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.45); }
+    .toast-head { display: flex; justify-content: space-between; color: var(--muted); font-size: 10.5px; font-weight: 600; margin-bottom: 4px; }
+    .toast b { display: block; font-size: 12.5px; margin-bottom: 2px; }
+    .toast span { color: var(--muted); }
+
+    section { padding: 88px 0; }
+    .alt { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-head { max-width: 640px; margin-bottom: 48px; }
+    h2 { font-size: clamp(1.75rem, 3.6vw, 2.5rem); font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .section-head p { color: var(--muted); font-size: 1.0625rem; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .step { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+    .step-num { width: 34px; height: 34px; border-radius: 10px; background: rgba(14,165,233,0.14); color: var(--accent); font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .step h3 { font-size: 1.125rem; margin-bottom: 8px; }
+    .step p { color: var(--muted); font-size: 0.9375rem; }
+
+    .severity { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+    .sev { border-radius: 14px; padding: 18px 20px; border: 1px solid var(--line); background: var(--card); }
+    .sev-title { display: flex; align-items: center; gap: 10px; font-weight: 700; margin-bottom: 4px; }
+    .sev-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .sev p { color: var(--muted); font-size: 0.875rem; }
+
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feature { padding: 26px; border-radius: 16px; border: 1px solid var(--line); background: rgba(23, 39, 54, 0.6); }
+    .icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(14,165,233,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .feature h3 { font-size: 1.0625rem; margin-bottom: 6px; }
+    .feature p { color: var(--muted); font-size: 0.9375rem; }
+
+    .built { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .built p { color: var(--muted); font-size: 1.0625rem; margin-bottom: 16px; }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+    .stat b { display: block; font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 6px; }
+    .stat span { color: var(--muted); font-size: 0.875rem; }
+
+    .cta-band { text-align: center; padding: 96px 0; background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(14,165,233,0.16), transparent 70%); }
+    .cta-band h2 { max-width: 640px; margin: 0 auto 14px; }
+    .cta-band p { color: var(--muted); font-size: 1.0625rem; max-width: 520px; margin: 0 auto 30px; }
+    .cta-band .cta-row { justify-content: center; margin-bottom: 18px; }
+    .cta-band small { color: var(--dim); font-size: 0.875rem; }
+    .cta-band small a { color: var(--accent); }
+
+    footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--dim); font-size: 13px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 900px) {
+      .hero { padding: 56px 0 64px; } .phone-stage { padding-top: 40px; }
+      .hero .wrap, .built { grid-template-columns: 1fr; gap: 48px; }
+      .steps, .features, .severity { grid-template-columns: 1fr 1fr; }
+      .toast { left: -32px; }
     }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(14, 165, 233, 0.3);
-      border-radius: 20px;
-      margin-bottom: 2rem;
-      font-size: 12px;
-      color: #94a3b8;
-      letter-spacing: 1px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background: #22c55e;
-      border-radius: 50%;
-    }
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 3.5rem);
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 0.75rem;
-      color: #f1f5f9;
-    }
-    .tagline {
-      color: #0ea5e9;
-      font-size: 1.125rem;
-      font-style: italic;
-      margin-bottom: 2rem;
-      font-weight: 500;
-    }
-    .lead {
-      color: #94a3b8;
-      font-size: 1.0625rem;
-      line-height: 1.7;
-      max-width: 520px;
-      margin: 0 auto 2.5rem;
-    }
-    .stats {
-      display: flex;
-      gap: 2.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 2.5rem;
-      padding: 1.5rem 0;
-      border-top: 1px solid rgba(148, 163, 184, 0.15);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-    }
-    .stat-num {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .stat-label {
-      font-size: 11px;
-      color: #64748b;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-    .features {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 2.5rem;
-    }
-    .feature {
-      color: #94a3b8;
-      font-size: 0.9375rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .check {
-      color: #22c55e;
-      font-weight: 700;
-    }
-    .contact {
-      color: #64748b;
-      font-size: 0.9375rem;
-    }
-    .contact a {
-      color: #0ea5e9;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .contact a:hover {
-      color: #38bdf8;
-    }
-    .footer {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.1);
-      color: #64748b;
-      font-size: 13px;
-    }
-    @media (max-width: 480px) {
-      .stats { gap: 1.5rem; }
-      .features { flex-direction: column; gap: 0.75rem; align-items: center; }
+    @media (max-width: 640px) {
+      .wrap { padding: 0 16px; }
+      .nav-links a:not(.btn) { display: none; }
+      section { padding: 64px 0; }
+      .steps, .features, .severity { grid-template-columns: 1fr; }
+      .cta-row .btn { flex: 1 1 auto; }
+      .phone { width: 270px; }
+      .toast { left: -8px; top: -40px; width: 220px; }
+      .stat b { font-size: 1.625rem; }
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <div class="badge">
-      <span class="badge-dot"></span>
-      <span>Launching summer 2026</span>
-    </div>
-    <h1>DockPulse</h1>
-    <p class="tagline">The real-time pulse of your dock operation.</p>
-    <p class="lead">
-      Fleet maintenance management built for watersports rental operators.
-      Catch issues before boats leave the dock — and keep them on the water where they make money.
-    </p>
-    <div class="stats">
-      <div>
-        <div class="stat-num">119</div>
-        <div class="stat-label">boats tracked</div>
-      </div>
-      <div>
-        <div class="stat-num">4</div>
-        <div class="stat-label">fleets piloted</div>
-      </div>
-      <div>
-        <div class="stat-num">&lt;30s</div>
-        <div class="stat-label">to report an issue</div>
+
+  <nav>
+    <div class="wrap">
+      <a href="#" class="logo" aria-label="DockPulse home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0ea5e9"/><path d="M5 17h5l2.5-6 4 11 3-8 1.5 3H27" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        DockPulse
+      </a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a class="btn btn-primary btn-sm" href="mailto:will@dockpulse.io?subject=DockPulse%20demo">Book a demo</a>
       </div>
     </div>
-    <div class="features">
-      <div class="feature"><span class="check">✓</span> Real-time issue reporting</div>
-      <div class="feature"><span class="check">✓</span> Mechanic notifications</div>
-      <div class="feature"><span class="check">✓</span> Fleet-wide visibility</div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Fleet maintenance for watersports rentals</span>
+        <h1>Know which boats are ready <span>before the first rental</span> leaves the dock.</h1>
+        <p class="lead">DockPulse is the maintenance app built for rental operators. Dock staff flag problems in seconds, mechanics get alerted right away, and managers see every boat at every location in one place.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="mailto:will@dockpulse.io?subject=DockPulse%20demo">Book a demo</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <div class="proof">
+          <span class="proof-dot"></span>
+          <span>In daily use by a 120-vessel watersports operation on the Emerald Coast.</span>
+        </div>
+      </div>
+
+      <div class="phone-stage">
+        <div class="phone-wrap">
+          <div class="phone" role="img" aria-label="DockPulse app dashboard showing open issues by severity">
+            <div class="screen">
+              <div class="screen-top"><span>7:42</span><span>●●● ▮</span></div>
+              <h3>Good morning</h3>
+              <div class="sub">3 locations · 17 boats</div>
+              <div class="tiles">
+                <div class="tile red"><b>2</b><small>Do not send</small></div>
+                <div class="tile amber"><b>2</b><small>Attention</small></div>
+                <div class="tile green"><b>13</b><small>Ready</small></div>
+              </div>
+              <div class="section-label">Open issues</div>
+              <div class="issue"><span class="bar" style="background:var(--red)"></span><div><strong>Engine running hot at idle <span class="pill red">DNS</span></strong><em>Pontoon 5 · Destin Harbor · In progress</em></div></div>
+              <div class="issue"><span class="bar" style="background:var(--red)"></span><div><strong>Bilge pump not kicking on <span class="pill red">DNS</span></strong><em>Fishing 1 · Okaloosa Marina</em></div></div>
+              <div class="issue"><span class="bar" style="background:var(--amber)"></span><div><strong>Bimini frame bent <span class="pill amber">Attention</span></strong><em>Pontoon 4 · Destin Harbor · Assigned</em></div></div>
+              <div class="issue"><span class="bar" style="background:var(--green)"></span><div><strong>Scratch on port side <span class="pill green">Sendable</span></strong><em>Ski 3 · North Yard</em></div></div>
+            </div>
+          </div>
+          <div class="toast" aria-hidden="true">
+            <div class="toast-head"><span>DOCKPULSE</span><span>now</span></div>
+            <b>Do Not Send: Fishing 1</b>
+            <span>Bilge pump not kicking on. Reported by dock crew.</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <p class="contact">
-      Get in touch: <a href="mailto:will@dockpulse.io">will@dockpulse.io</a>
-    </p>
-    <div class="footer">
-      © 2026 DockPulse LLC · Fort Walton Beach, Florida
+  </header>
+
+  <section id="how" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>From the dock to the shop without the group text.</h2>
+        <p>Problems get spotted on the dock and fixed in the shop. DockPulse connects the two so nothing gets lost between shifts.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Spot it</h3>
+          <p>Anyone on the dock picks the boat, snaps a photo, and marks how serious it is. Takes about 30 seconds.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Fix it</h3>
+          <p>Mechanics get a push notification immediately. They assign it, comment on it, and close it out with notes, parts, and cost.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Track it</h3>
+          <p>Every issue, checklist, and service lands in the boat's history, so you always know what was done and when.</p>
+        </div>
+      </div>
+      <div class="severity">
+        <div class="sev"><div class="sev-title"><span class="sev-dot" style="background:var(--red)"></span>Do Not Send</div><p>Boat stays at the dock. Mechanics get a high priority alert.</p></div>
+        <div class="sev"><div class="sev-title"><span class="sev-dot" style="background:var(--amber)"></span>Needs Attention</div><p>Safe to rent, but it needs a look soon.</p></div>
+        <div class="sev"><div class="sev-title"><span class="sev-dot" style="background:var(--green)"></span>Sendable</div><p>Cosmetic or minor. Logged so it doesn't get forgotten.</p></div>
+      </div>
     </div>
-  </main>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Features</span>
+        <h2>Everything your crew already does, in one app.</h2>
+        <p>Built for pontoons, jet skis, and fishing boats spread across multiple docks and yards.</p>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+          <h3>Issue reporting</h3>
+          <p>Photos, severity, and status on every problem. Comment threads keep the back and forth in one place.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+          <h3>Instant alerts</h3>
+          <p>Push notifications for new issues, assignments, and comments. Each person picks what they want to hear about.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></div>
+          <h3>Pre-op and seasonal checklists</h3>
+          <p>Daily pre-ops and winterization lists that several people can work on and pick back up later.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>Preventive maintenance</h3>
+          <p>Oil changes, lower units, impellers, and plugs tracked by engine hours or days, with due and overdue flags.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3>Every location</h3>
+          <p>See every boat by location, move boats between docks and yards, and archive the ones you retire without losing their history.</p>
+        </div>
+        <div class="feature">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
+          <h3>Team to-dos</h3>
+          <p>Shop and yard work organized by area, assigned to people, with due dates and status everyone can see.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap built">
+      <div>
+        <span class="eyebrow">Built on a working dock</span>
+        <h2>Made with the mechanics and dock managers who use it.</h2>
+        <p>DockPulse was built side by side with a working rental operation on the Emerald Coast. Features ship when the crew asks for them, and get tested on real boats before anyone else sees them.</p>
+        <p>Owners stay in control. You decide who can report, assign, move boats, and see each area, and your team sets up their own locations, checklists, and lists right in the app.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>120</b><span>vessels managed in production</span></div>
+        <div class="stat"><b>&lt;30s</b><span>to report an issue from the dock</span></div>
+        <div class="stat"><b>4</b><span>locations on one account</span></div>
+        <div class="stat"><b>iPhone</b><span>native app built for the dock</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>See DockPulse on a fleet like yours.</h2>
+      <p>A 20 minute walkthrough with real boats, real issues, and real checklists. Bring your questions about how your crew works today.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="mailto:will@dockpulse.io?subject=DockPulse%20demo">Book a demo</a>
+      </div>
+      <small>Or email <a href="mailto:will@dockpulse.io">will@dockpulse.io</a></small>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 DockPulse LLC · Fort Walton Beach, Florida</span>
+      <a href="mailto:will@dockpulse.io">will@dockpulse.io</a>
+    </div>
+  </footer>
+
 </body>
 </html>
