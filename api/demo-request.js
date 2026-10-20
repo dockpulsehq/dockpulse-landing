@@ -23,7 +23,10 @@ module.exports = async function handler(req, res) {
   }
 
   // Honeypot: bots fill hidden fields. Pretend success.
-  if (body._honey) return wantsJson ? res.status(200).json({ ok: true }) : res.redirect(303, '/?sent=1#demo');
+  if (body.dp_trap_7) {
+    console.log('demo-request: honeypot filled, dropping');
+    return wantsJson ? res.status(200).json({ ok: true }) : res.redirect(303, '/?sent=1#demo');
+  }
 
   const name = clean(body.name, 120);
   const company = clean(body.company, 160);
@@ -70,5 +73,6 @@ module.exports = async function handler(req, res) {
     return res.status(502).json({ ok: false, error: 'Could not send.' });
   }
 
+  console.log('demo-request: sent via Resend for', company);
   return wantsJson ? res.status(200).json({ ok: true }) : res.redirect(303, '/?sent=1#demo');
 };
