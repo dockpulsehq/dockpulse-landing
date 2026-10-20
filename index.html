@@ -129,6 +129,20 @@
     .cta-band .cta-row { justify-content: center; margin-bottom: 18px; }
     .cta-band small { color: var(--dim); font-size: 0.875rem; }
     .cta-band small a { color: var(--accent); }
+    .demo-form { max-width: 560px; margin: 0 auto 18px; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .demo-form label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .demo-form .full { grid-column: 1 / -1; }
+    .demo-form input, .demo-form select, .demo-form textarea { width: 100%; font: inherit; font-size: 1rem; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; }
+    .demo-form textarea { min-height: 90px; resize: vertical; }
+    .demo-form input:focus, .demo-form select:focus, .demo-form textarea:focus { outline: none; border-color: var(--accent); }
+    .demo-form button { border: 0; cursor: pointer; width: 100%; font-family: inherit; }
+    .hp { position: absolute; left: -9999px; }
+    .thanks { display: none; max-width: 560px; margin: 0 auto 18px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.35); border-radius: 18px; padding: 28px; }
+    .thanks b { display: block; font-size: 1.125rem; margin-bottom: 4px; }
+    .thanks span { color: var(--muted); }
+    .sent .demo-form { display: none; }
+    .sent .thanks { display: block; }
+    @media (max-width: 640px) { .demo-form { grid-template-columns: 1fr; padding: 20px; } }
 
     footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--dim); font-size: 13px; }
     footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -163,7 +177,7 @@
       <div class="nav-links">
         <a href="#how">How it works</a>
         <a href="#features">Features</a>
-        <a class="btn btn-primary btn-sm" href="mailto:will@dockpulse.io?subject=DockPulse%20demo">Book a demo</a>
+        <a class="btn btn-primary btn-sm" href="#demo">Book a demo</a>
       </div>
     </div>
   </nav>
@@ -175,7 +189,7 @@
         <h1>Know which boats are ready <span>before the first rental</span> leaves the dock.</h1>
         <p class="lead">DockPulse is the maintenance app built for rental operators. Dock staff flag problems in seconds, mechanics get alerted right away, and managers see every boat at every location in one place.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="mailto:will@dockpulse.io?subject=DockPulse%20demo">Book a demo</a>
+          <a class="btn btn-primary" href="#demo">Book a demo</a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
         <div class="proof">
@@ -304,16 +318,58 @@
     </div>
   </section>
 
-  <section class="cta-band">
-    <div class="wrap">
+  <section class="cta-band" id="demo">
+    <div class="wrap" id="demo-wrap">
       <h2>See DockPulse on a fleet like yours.</h2>
-      <p>A 20 minute walkthrough with real boats, real issues, and real checklists. Bring your questions about how your crew works today.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="mailto:will@dockpulse.io?subject=DockPulse%20demo">Book a demo</a>
-      </div>
+      <p>A 20 minute walkthrough with real boats, real issues, and real checklists. Tell us a little about your operation and we'll reach out to set up a time.</p>
+      <form class="demo-form" id="demo-form" action="https://formsubmit.co/will@dockpulse.io" method="POST">
+        <input type="hidden" name="_subject" value="New DockPulse demo request">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://dockpulse.io/?sent=1#demo">
+        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div><label for="f-name">Name</label><input id="f-name" name="name" required autocomplete="name"></div>
+        <div><label for="f-company">Company</label><input id="f-company" name="company" required autocomplete="organization"></div>
+        <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+        <div><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+        <div class="full"><label for="f-fleet">Fleet size</label>
+          <select id="f-fleet" name="fleet_size">
+            <option>Under 15 boats</option>
+            <option>15 to 50 boats</option>
+            <option>50 to 100 boats</option>
+            <option>100+ boats</option>
+          </select>
+        </div>
+        <div class="full"><label for="f-msg">Anything we should know? (optional)</label><textarea id="f-msg" name="message"></textarea></div>
+        <div class="full"><button class="btn btn-primary" type="submit" id="f-submit">Request a demo</button></div>
+      </form>
+      <div class="thanks" role="status"><b>Got it, thanks.</b><span>We'll reach out within a day to set up a time.</span></div>
       <small>Or email <a href="mailto:will@dockpulse.io">will@dockpulse.io</a></small>
     </div>
   </section>
+  <script>
+    (function () {
+      var wrap = document.getElementById('demo-wrap');
+      var form = document.getElementById('demo-form');
+      var btn = document.getElementById('f-submit');
+      if (location.search.indexOf('sent=1') !== -1) wrap.classList.add('sent');
+      form.addEventListener('submit', function (e) {
+        if (!window.fetch) return;
+        e.preventDefault();
+        btn.disabled = true; btn.textContent = 'Sending...';
+        fetch('https://formsubmit.co/ajax/will@dockpulse.io', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        }).then(function (r) { return r.json(); }).then(function (d) {
+          if (d && (d.success === true || d.success === 'true')) { wrap.classList.add('sent'); }
+          else { throw new Error('fail'); }
+        }).catch(function () {
+          form.submit();
+        });
+      });
+    })();
+  </script>
 
   <footer>
     <div class="wrap">
